@@ -1,0 +1,67 @@
+{
+  "info": {
+    "name": "Event Booking API",
+    "_postman_id": "event-booking-api-collection",
+    "description": "API collection for Laravel Event Booking System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Alice\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/register", "host": ["http://localhost:8080"], "path": ["api", "register"] }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"password\"\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/login", "host": ["http://localhost:8080"], "path": ["api", "login"] }
+      }
+    },
+    {
+      "name": "List Events",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://localhost:8080/api/events", "host": ["http://localhost:8080"], "path": ["api", "events"] }
+      }
+    },
+    {
+      "name": "Book Event",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"event_id\": 1\n}"
+        },
+        "url": { "raw": "http://localhost:8080/api/bookings", "host": ["http://localhost:8080"], "path": ["api", "bookings"] }
+      }
+    },
+    {
+      "name": "My Bookings",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": { "raw": "http://localhost:8080/api/my-bookings", "host": ["http://localhost:8080"], "path": ["api", "my-bookings"] }
+      }
+    }
+  ]
+}

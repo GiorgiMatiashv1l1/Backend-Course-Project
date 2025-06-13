@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Event;
 use App\Models\Booking;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\models\User;
 
 class BookingController extends Controller
 {
@@ -27,7 +27,19 @@ class BookingController extends Controller
 
 public function myBookings()
 {
-    return auth()->user()->bookings()->with('event')->get();
+    $user = auth()->user();
+
+    if (!$user) {
+        return response()->json(['error' => 'Not authenticated'], 401);
+    }
+
+    if (!method_exists($user, 'bookings')) {
+        return response()->json(['error' => 'Bookings method does not exist on User model'], 500);
+    }
+
+    $bookings = $user->bookings()->with('event')->get();
+
+    return response()->json($bookings);
 }
 
 }

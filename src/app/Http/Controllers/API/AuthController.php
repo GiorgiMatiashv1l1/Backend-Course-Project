@@ -1,48 +1,41 @@
 <?php
-
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed'
+            'password' => 'required|confirmed|min:6',
         ]);
 
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
         ]);
 
-        return response()->json([
-            'token' => $user->createToken('api-token')->plainTextToken
-        ]);
-    }      
+        $token = $user->createToken('api_token')->plainTextToken;
+
+        return response()->json(['token' => $token], 201);
+    }
 
     public function login(Request $request)
     {
-        $data = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        $user = User::where('email', $request->email)->first();
 
-        $user = User::where('email', $data['email'])->first();
-
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        return response()->json([
-            'token' => $user->createToken('api-token')->plainTextToken
-        ]);
+        $token = $user->createToken('api_token')->plainTextToken;
+
+        return response()->json(['token' => $token], 200);
     }
 }
